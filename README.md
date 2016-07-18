@@ -1,7 +1,7 @@
 Programming Tester
 ===========================
 
-We can test the console applicaton, which uses STDIO and STDOUT, using this
+We can test the console applicaton, which uses STDIN and STDOUT, using this
 application.
 
 Licence
