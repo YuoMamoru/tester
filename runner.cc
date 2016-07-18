@@ -1,9 +1,12 @@
 #include <string>
 #include <iostream>
+#include <cstdlib>
 #include <stdio.h>
+#include <unistd.h>
 #include "language.h"
 #include "runner.h"
 using namespace std;
+
 
 Runner::Runner(string source_file, string testcase_file){
     _source_file = source_file;
@@ -22,26 +25,56 @@ int Runner::compile() const{
     return 0;
 }
 int Runner::execute() const{
-    FILE* fp;
-    char buf[1024];
-    if((fp = popen(execute_command().c_str(), "r")) != NULL){
-        fputs("test0\n", fp);
-        fputs("test1\n", fp);
-        cout << language() << ": executing...\n";
-        while(fgets(buf, sizeof(buf), fp) != NULL){
-            cout << buf << endl;
-        }
-        cout << language() << ": executing...\n";
-        return pclose(fp);
+    int pipe_to_child[2];
+    int pipe_from_child[2];
+    if(pipe(pipe_to_child) < 0){
+        perror("popen");
+        exit(EXIT_FAILURE);
     }
-    return -1;
+    if(pipe(pipe_from_child) < 0){
+        perror("popen");
+        close(pipe_to_child[0]);
+        close(pipe_to_child[1]);
+        exit(EXIT_FAILURE);
+    }
+    int pid = fork();
+    if(pid < 0){
+        perror("fork");
+        close(pipe_to_child[0]);
+        close(pipe_to_child[1]);
+        close(pipe_from_child[0]);
+        close(pipe_from_child[1]);
+        exit(EXIT_FAILURE);
+    }
+    if(pid == 0){
+        close(pipe_to_child[1]);
+        close(pipe_from_child[0]);
+        dup2(pipe_to_child[0], fileno(stdin));
+        dup2(pipe_from_child[1], fileno(stdout));
+        close(pipe_to_child[0]);
+        close(pipe_from_child[1]);
+        if(execlp("sh", "sh", "-c", execute_command().c_str(), NULL) < 0){
+            perror("execute");
+            exit(EXIT_FAILURE);
+        }
+    }
+    write(pipe_to_child[1], "send message\n", 13);
+    write(pipe_to_child[1], "send mesg\n", 10);
+    close(pipe_to_child[1]);
+    char buff[255];
+    read(pipe_from_child[0], buff, 255);
+    printf("parent process:\n\n%s", buff);
+    return 0;
 }
 int Runner::cleanup() const{
     return 0;
 }
 void Runner::run() const{
     cout << "compiling..." << endl;
-    compile();
+    if(compile() != 0){
+        cerr << "Failed compile." << endl;
+        exit(EXIT_FAILURE);
+    }
     cout << "executing..." << endl;
     execute();
 }
