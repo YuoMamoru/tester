@@ -9,21 +9,21 @@
 #include "tester.h"
 using namespace std;
 
-ArgParser::ArgParser(int argc, char** argv){
+Tester::Tester(int argc, char** argv){
     for(int i = 0; i < argc; i++)
         _args.push_back(string(argv[i]));
     _lang = remove_extension(_args[1], _target);
 }
-string ArgParser::tester_file() const{
+string Tester::tester_file() const{
     return _args[0];
 }
-string ArgParser::source_file() const{
+string Tester::source_file() const{
     return _args[1];
 }
-Language ArgParser::language() const{
+Language Tester::language() const{
     return _lang;
 }
-string ArgParser::testcase_file() const{
+string Tester::testcase_file() const{
     return _target + ".txt";
 }
 
@@ -49,7 +49,7 @@ int main(int argc, char** argv){
         cout << "no target.\n";
         return 0;
     }
-    ArgParser args(argc, argv);
+    Tester args(argc, argv);
     Runner* runner = create_runner(args.language(), args.source_file(), args.testcase_file());
 //    cout << runner->test() << endl << args.testcase_file() << endl;
     runner->run();

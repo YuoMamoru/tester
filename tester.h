@@ -1,12 +1,12 @@
 using namespace std;
 
-class ArgParser{
+class Tester{
     vector<string> _args;
     Language _lang;
     string _target;
 
 public:
-    ArgParser(int argc, char** argv);
+    Tester(int argc, char** argv);
     string tester_file() const;
     string source_file() const;
     Language language() const;
