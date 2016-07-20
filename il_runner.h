@@ -1,3 +1,6 @@
+#ifndef IL_RUNNER_H_
+#define IL_RUNNER_H_
+
 using namespace std;
 
 class IlRunner : public CompilerRunner{
@@ -28,3 +31,5 @@ public:
     CSharpRunner(string source_file, string testcase_file);
     virtual Language language() const;
 };
+
+#endif // IL_RUNNER_H_

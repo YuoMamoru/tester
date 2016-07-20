@@ -1,3 +1,6 @@
+#ifndef SCRIPT_RUNNER_H_
+#define SCRIPT_RUNNER_H_
+
 using namespace std;
 
 class ScriptRunner : public Runner{
@@ -23,3 +26,5 @@ public:
     JavaScriptRunner(string source_file, string testcase_file);
     virtual Language language() const;
 };
+
+#endif // SCRIPT_RUNNER_H_

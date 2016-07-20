@@ -1,3 +1,6 @@
+#ifndef RUNNER_H_
+#define RUNNER_H_
+
 using namespace std;
 
 class Runner{
@@ -17,3 +20,5 @@ public:
     virtual int cleanup() const;
     void run() const;
 };
+
+#endif // RUNNER_H_

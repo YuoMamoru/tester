@@ -1,3 +1,6 @@
+#ifndef COMPILER_RUNNER_H_
+#define COMPILER_RUNNER_H_
+
 using namespace std;
 
 class CompilerRunner : public Runner{
@@ -31,3 +34,5 @@ public:
     CPlusPlusRunner(string source_file, string testcase_file);
     virtual Language language() const;
 };
+
+#endif //  COMPILER_RUNNER_H_
