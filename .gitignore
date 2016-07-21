@@ -1,3 +1,4 @@
 tester
 *.o
 *.h.gch
+*.swp
