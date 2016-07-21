@@ -3,26 +3,27 @@
 #include "runner.h"
 #include "script_runner.h"
 
-ScriptRunner::ScriptRunner(std::string sourceFile, std::string testcaseFile)
+ScriptRunner::ScriptRunner(const char* sourceFile, const char* testcaseFile)
       : Runner(sourceFile, testcaseFile){}
 std::string ScriptRunner::commandToExecute() const{
     return interpreter() + " " + sourceFile();
 }
 
-RubyRunner::RubyRunner(std::string sourceFile, std::string testcaseFile)
+RubyRunner::RubyRunner(const char* sourceFile, const char* testcaseFile)
       : ScriptRunner(sourceFile, testcaseFile){}
 Language RubyRunner::language() const{
     return Ruby;
 }
 std::string RubyRunner::interpreter() const{
-    return "ruby";
+    return std::string("ruby");
 }
 
-JavaScriptRunner::JavaScriptRunner(std::string sourceFile, std::string testcaseFile)
+JavaScriptRunner::JavaScriptRunner(const char* sourceFile,
+                                   const char* testcaseFile)
       : ScriptRunner(sourceFile, testcaseFile){}
 Language JavaScriptRunner::language() const{
     return JavaScript;
 }
 std::string JavaScriptRunner::interpreter() const{
-    return "node";
+    return std::string("node");
 }

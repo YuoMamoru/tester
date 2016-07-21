@@ -6,7 +6,11 @@
 
 class ScriptRunner : public Runner{
   public:
-    ScriptRunner(std::string sourceFile, std::string testcaseFile);
+    ScriptRunner(const char* sourceFile, const char* testcaseFile);
+  private:
+    ScriptRunner();
+    ScriptRunner(const ScriptRunner&);
+    void operator=(const ScriptRunner&);
   protected:
     virtual std::string interpreter() const = 0;
     virtual std::string commandToExecute() const;
@@ -14,7 +18,12 @@ class ScriptRunner : public Runner{
 
 class RubyRunner : public ScriptRunner{
   public:
-    RubyRunner(std::string sourceFile, std::string testcaseFile);
+    RubyRunner(const char* sourceFile, const char* testcaseFile);
+  private:
+    RubyRunner();
+    RubyRunner(const RubyRunner&);
+    void operator=(const RubyRunner&);
+  public:
     virtual Language language() const;
   protected:
     virtual std::string interpreter() const;
@@ -22,7 +31,12 @@ class RubyRunner : public ScriptRunner{
 
 class JavaScriptRunner : public ScriptRunner{
   public:
-    JavaScriptRunner(std::string sourceFile, std::string testcaseFile);
+    JavaScriptRunner(const char* sourceFile, const char* testcaseFile);
+  private:
+    JavaScriptRunner();
+    JavaScriptRunner(const JavaScriptRunner&);
+    void operator=(const JavaScriptRunner&);
+  public:
     virtual Language language() const;
   protected:
     virtual std::string interpreter() const;

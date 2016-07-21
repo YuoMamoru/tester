@@ -1,14 +1,21 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 #include <string>
 #include <iostream>
 #include <cstdlib>
-#include <stdio.h>
-#include <unistd.h>
 #include "language.h"
 #include "runner.h"
 
-Runner::Runner(std::string sourceFile, std::string testcaseFile){
-    sourceFile = sourceFile;
-    testcaseFile_ = testcaseFile;
+Runner::Runner(const char* sourceFile, const char* testcaseFile){
+    sourceFile_ = new char[strlen(sourceFile) + 1];
+    testcaseFile_ = new char[strlen(testcaseFile) + 1];
+    strcpy(sourceFile_, sourceFile);
+    strcpy(testcaseFile_, testcaseFile);
+}
+Runner::~Runner(){
+    delete[] sourceFile_;
+    delete[] testcaseFile_;
 }
 int Runner::compile() const{
     return 0;
@@ -68,10 +75,10 @@ void Runner::run() const{
     execute();
 }
 std::string Runner::sourceFile() const{
-    return sourceFile_;
+    return std::string(sourceFile_);
 }
 std::string Runner::testcaseFile() const{
-    return testcaseFile_;
+    return std::string(testcaseFile_);
 }
 Language Runner::language() const{
     return Unknown;

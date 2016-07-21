@@ -9,6 +9,12 @@
 class Tester{
   public:
     Tester(int argc, char** argv);
+    virtual ~Tester();
+  private:
+    Tester();
+    Tester(const Tester&);
+    void operator=(const Tester&);
+  public:
     std::string testerFile() const;
     std::string sourceFile() const;
     std::string testcaseFile() const;

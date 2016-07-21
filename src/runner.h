@@ -6,7 +6,13 @@
 
 class Runner{
   public:
-    Runner(std::string sourceFile, std::string testcaseFile);
+    Runner(const char* sourceFile, const char* testcaseFile);
+    virtual ~Runner();
+  private:
+    Runner();
+    Runner(const Runner&);
+    void operator=(const Runner&);
+  public:
     virtual int compile() const;
     virtual int execute() const;
     virtual int cleanup() const;
@@ -17,8 +23,8 @@ class Runner{
   protected:
     virtual std::string commandToExecute() const = 0;
   private:
-    std::string sourceFile_;
-    std::string testcaseFile_;
+    char* sourceFile_;
+    char* testcaseFile_;
 };
 
 #endif // YUOMAMO_TESTER_RUNNER_H_

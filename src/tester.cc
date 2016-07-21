@@ -13,6 +13,7 @@ Tester::Tester(int argc, char** argv){
         args_.push_back(std::string(argv[i]));
     lang_ = removeExtension(args_[1], target_);
 }
+Tester::~Tester(){}
 std::string Tester::testerFile() const{
     return args_[0];
 }
@@ -29,15 +30,15 @@ Language Tester::language() const{
 Runner* createRunner(Language language, std::string sourceFile, std::string testcaseFile){
     switch(language){
     case C:
-        return new CRunner(sourceFile, testcaseFile);
+        return new CRunner(sourceFile.c_str(), testcaseFile.c_str());
     case CPlusPlus:
-        return new CPlusPlusRunner(sourceFile, testcaseFile);
+        return new CPlusPlusRunner(sourceFile.c_str(), testcaseFile.c_str());
     case Java:
-        return new JavaRunner(sourceFile, testcaseFile);
+        return new JavaRunner(sourceFile.c_str(), testcaseFile.c_str());
     case Ruby:
-        return new RubyRunner(sourceFile, testcaseFile);
+        return new RubyRunner(sourceFile.c_str(), testcaseFile.c_str());
     case CSharp:
-        return new CSharpRunner(sourceFile, testcaseFile);
+        return new CSharpRunner(sourceFile.c_str(), testcaseFile.c_str());
     default:
         return NULL;
     }
