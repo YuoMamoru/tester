@@ -1,12 +1,12 @@
 #include <string>
 #include "language.h"
 
-Language remove_extension(std::string file_name, std::string& name){
-    for(int i = file_name.length(); i > 0; i--){
-        if(file_name[i-1] != '.')
+Language removeExtension(std::string fileName, std::string& name){
+    for(int i = fileName.length(); i > 0; i--){
+        if(fileName[i-1] != '.')
             continue;
-        name = std::string(file_name.substr(0, i - 1));
-        std::string extension = file_name.substr(i, file_name.length() - i);
+        name = std::string(fileName.substr(0, i - 1));
+        std::string extension = fileName.substr(i, fileName.length() - i);
         if(extension == "c")
             return C;
         else if(extension == "cc" || extension == "cpp")
@@ -22,6 +22,6 @@ Language remove_extension(std::string file_name, std::string& name){
         else
             return Unknown;
     }
-    name = std::string(file_name);
+    name = std::string(fileName);
     return Unknown;
 }

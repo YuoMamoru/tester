@@ -10,34 +10,34 @@
 
 Tester::Tester(int argc, char** argv){
     for(int i = 0; i < argc; i++)
-        _args.push_back(std::string(argv[i]));
-    _lang = remove_extension(_args[1], _target);
+        args_.push_back(std::string(argv[i]));
+    lang_ = removeExtension(args_[1], target_);
 }
-std::string Tester::tester_file() const{
-    return _args[0];
+std::string Tester::testerFile() const{
+    return args_[0];
 }
-std::string Tester::source_file() const{
-    return _args[1];
+std::string Tester::sourceFile() const{
+    return args_[1];
 }
-std::string Tester::testcase_file() const{
-    return _target + ".txt";
+std::string Tester::testcaseFile() const{
+    return target_ + ".txt";
 }
 Language Tester::language() const{
-    return _lang;
+    return lang_;
 }
 
-Runner* create_runner(Language language, std::string source_file, std::string testcase_file){
+Runner* createRunner(Language language, std::string sourceFile, std::string testcaseFile){
     switch(language){
     case C:
-        return new CRunner(source_file, testcase_file);
+        return new CRunner(sourceFile, testcaseFile);
     case CPlusPlus:
-        return new CPlusPlusRunner(source_file, testcase_file);
+        return new CPlusPlusRunner(sourceFile, testcaseFile);
     case Java:
-        return new JavaRunner(source_file, testcase_file);
+        return new JavaRunner(sourceFile, testcaseFile);
     case Ruby:
-        return new RubyRunner(source_file, testcase_file);
+        return new RubyRunner(sourceFile, testcaseFile);
     case CSharp:
-        return new CSharpRunner(source_file, testcase_file);
+        return new CSharpRunner(sourceFile, testcaseFile);
     default:
         return NULL;
     }
@@ -49,7 +49,7 @@ int main(int argc, char** argv){
         return 0;
     }
     Tester args(argc, argv);
-    Runner* runner = create_runner(args.language(), args.source_file(), args.testcase_file());
-//    std::cout << runner->test() << std::endl << args.testcase_file() << std::endl;
+    Runner* runner = createRunner(args.language(), args.sourceFile(), args.testcaseFile());
+//    std::cout << runner->test() << std::endl << args.testcaseFile() << std::endl;
     runner->run();
 }

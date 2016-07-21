@@ -6,19 +6,19 @@
 
 class Runner{
   public:
-    Runner(std::string source_file, std::string testcase_file);
+    Runner(std::string sourceFile, std::string testcaseFile);
     virtual int compile() const;
     virtual int execute() const;
     virtual int cleanup() const;
     void run() const;
-    std::string source_file() const;
-    std::string testcase_file() const;
+    std::string sourceFile() const;
+    std::string testcaseFile() const;
     virtual Language language() const;
   protected:
-    virtual std::string execute_command() const = 0;
+    virtual std::string commandToExecute() const = 0;
   private:
-    std::string _source_file;
-    std::string _testcase_file;
+    std::string sourceFile_;
+    std::string testcaseFile_;
 };
 
 #endif // YUOMAMO_TESTER_RUNNER_H_

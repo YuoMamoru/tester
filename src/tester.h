@@ -9,16 +9,16 @@
 class Tester{
   public:
     Tester(int argc, char** argv);
-    std::string tester_file() const;
-    std::string source_file() const;
-    std::string testcase_file() const;
+    std::string testerFile() const;
+    std::string sourceFile() const;
+    std::string testcaseFile() const;
     Language language() const;
   private:
-    std::vector<std::string> _args;
-    Language _lang;
-    std::string _target;
+    std::vector<std::string> args_;
+    Language lang_;
+    std::string target_;
 };
 
-Runner* create_runner(Language language, std::string source_file, std::string testcase_file);
+Runner* createRunner(Language language, std::string sourceFile, std::string testcaseFile);
 
 #endif // YUOMAMO_TESTER_TESTER__H_

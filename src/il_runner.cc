@@ -4,40 +4,40 @@
 #include "compiler_runner.h"
 #include "il_runner.h"
 
-IlRunner::IlRunner(std::string source_file, std::string testcase_file)
-      : CompilerRunner(source_file, testcase_file){}
-std::string IlRunner::execute_command() const{
-    return vm_command() + " " + execute_file();
+IlRunner::IlRunner(std::string sourceFile, std::string testcaseFile)
+      : CompilerRunner(sourceFile, testcaseFile){}
+std::string IlRunner::commandToExecute() const{
+    return virtualMachine() + " " + executableFile();
 }
-std::string IlRunner::compile_command() const{
-    return compiler() + " " + source_file();
+std::string IlRunner::commandToCompile() const{
+    return compiler() + " " + sourceFile();
 }
 
-JavaRunner::JavaRunner(std::string source_file, std::string testcase_file)
-      : IlRunner(source_file, testcase_file){}
+JavaRunner::JavaRunner(std::string sourceFile, std::string testcaseFile)
+      : IlRunner(sourceFile, testcaseFile){}
 Language JavaRunner::language() const{
     return Java;
 }
-std::string JavaRunner::vm_command() const{
+std::string JavaRunner::virtualMachine() const{
     return "java";
 }
-std::string JavaRunner::execute_file() const{
-    return CompilerRunner::execute_file() + ".class";
+std::string JavaRunner::executableFile() const{
+    return CompilerRunner::executableFile() + ".class";
 }
 std::string JavaRunner::compiler() const{
     return std::string("javac");
 }
 
-CSharpRunner::CSharpRunner(std::string source_file, std::string testcase_file)
-      : IlRunner(source_file, testcase_file){}
+CSharpRunner::CSharpRunner(std::string sourceFile, std::string testcaseFile)
+      : IlRunner(sourceFile, testcaseFile){}
 Language CSharpRunner::language() const{
     return CSharp;
 }
-std::string CSharpRunner::vm_command() const{
+std::string CSharpRunner::virtualMachine() const{
     return "mono";
 }
-std::string CSharpRunner::execute_file() const{
-    return CompilerRunner::execute_file() + ".exe";
+std::string CSharpRunner::executableFile() const{
+    return CompilerRunner::executableFile() + ".exe";
 }
 std::string CSharpRunner::compiler() const{
     return std::string("msc");

@@ -6,30 +6,30 @@
 
 class IlRunner : public CompilerRunner{
   public:
-    IlRunner(std::string source_file, std::string testcase_file);
+    IlRunner(std::string sourceFile, std::string testcaseFile);
   protected:
-    virtual std::string vm_command() const = 0;
-    virtual std::string compile_command() const;
-    virtual std::string execute_command() const;
+    virtual std::string virtualMachine() const = 0;
+    virtual std::string commandToCompile() const;
+    virtual std::string commandToExecute() const;
 };
 
 class JavaRunner : public IlRunner{
   public:
-    JavaRunner(std::string source_file, std::string testcase_file);
+    JavaRunner(std::string sourceFile, std::string testcaseFile);
     virtual Language language() const;
   protected:
-    virtual std::string vm_command() const;
-    virtual std::string execute_file() const;
+    virtual std::string virtualMachine() const;
+    virtual std::string executableFile() const;
     virtual std::string compiler() const;
 };
 
 class CSharpRunner : public IlRunner{
   public:
-    CSharpRunner(std::string source_file, std::string testcase_file);
+    CSharpRunner(std::string sourceFile, std::string testcaseFile);
     virtual Language language() const;
   protected:
-    virtual std::string vm_command() const;
-    virtual std::string execute_file() const;
+    virtual std::string virtualMachine() const;
+    virtual std::string executableFile() const;
     virtual std::string compiler() const;
 };
 

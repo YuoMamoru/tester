@@ -4,31 +4,31 @@
 #include "runner.h"
 #include "compiler_runner.h"
 
-CompilerRunner::CompilerRunner(std::string source_file, std::string testcase_file)
-      : Runner(source_file, testcase_file){
-    remove_extension(this->source_file(), _execute_file);
+CompilerRunner::CompilerRunner(std::string sourceFile, std::string testcaseFile)
+      : Runner(sourceFile, testcaseFile){
+    removeExtension(this->sourceFile(), executableFile_);
 }
 int CompilerRunner::compile() const{
-    return system(compile_command().c_str());
+    return system(commandToCompile().c_str());
 }
 int CompilerRunner::cleanup() const{
-    return system(cleanup_command().c_str());
+    return system(commandToCleanup().c_str());
 }
-std::string CompilerRunner::execute_file() const{
-    return _execute_file;
+std::string CompilerRunner::executableFile() const{
+    return executableFile_;
 }
-std::string CompilerRunner::compile_command() const{
-    return compiler() + " -o " + execute_file() + " " + source_file();
+std::string CompilerRunner::commandToCompile() const{
+    return compiler() + " -o " + executableFile() + " " + sourceFile();
 }
-std::string CompilerRunner::execute_command() const{
-    return "./" + execute_file();
+std::string CompilerRunner::commandToExecute() const{
+    return "./" + executableFile();
 }
-std::string CompilerRunner::cleanup_command() const{
-    return "rm " + execute_file();
+std::string CompilerRunner::commandToCleanup() const{
+    return "rm " + executableFile();
 }
 
-CRunner::CRunner(std::string source_file, std::string testcase_file)
-      : CompilerRunner(source_file, testcase_file){}
+CRunner::CRunner(std::string sourceFile, std::string testcaseFile)
+      : CompilerRunner(sourceFile, testcaseFile){}
 Language CRunner::language() const{
     return C;
 }
@@ -36,8 +36,8 @@ std::string CRunner::compiler() const{
     return std::string("gcc");
 }
 
-CPlusPlusRunner::CPlusPlusRunner(std::string source_file, std::string testcase_file)
-      : CompilerRunner(source_file, testcase_file){}
+CPlusPlusRunner::CPlusPlusRunner(std::string sourceFile, std::string testcaseFile)
+      : CompilerRunner(sourceFile, testcaseFile){}
 Language CPlusPlusRunner::language() const{
     return CPlusPlus;
 }

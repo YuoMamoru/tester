@@ -6,6 +6,6 @@
 enum Language{
     C, CPlusPlus, Java, Ruby, CSharp, JavaScript, Unknown = 0xFFFF
 };
-Language remove_extension(std::string file_name, std::string& name);
+Language removeExtension(std::string fileName, std::string& name);
 
 #endif // YUOMAMO_TESTER_LANGUAGE_H_

@@ -7,22 +7,22 @@
 
 class CompilerRunner : public Runner{
   public:
-    CompilerRunner(std::string source_file, std::string testcase_file);
+    CompilerRunner(std::string sourceFile, std::string testcaseFile);
     virtual int compile() const;
     virtual int cleanup() const;
   protected:
-    virtual std::string execute_file() const;
+    virtual std::string executableFile() const;
     virtual std::string compiler() const = 0;
-    virtual std::string compile_command() const;
-    virtual std::string execute_command() const;
-    virtual std::string cleanup_command() const;
+    virtual std::string commandToCompile() const;
+    virtual std::string commandToExecute() const;
+    virtual std::string commandToCleanup() const;
   private:
-    std::string _execute_file;
+    std::string executableFile_;
 };
 
 class CRunner : public CompilerRunner{
   public:
-    CRunner(std::string source_file, std::string testcase_file);
+    CRunner(std::string sourceFile, std::string testcaseFile);
     virtual Language language() const;
   protected:
     virtual std::string compiler() const;
@@ -30,7 +30,7 @@ class CRunner : public CompilerRunner{
 
 class CPlusPlusRunner : public CompilerRunner{
   public:
-    CPlusPlusRunner(std::string source_file, std::string testcase_file);
+    CPlusPlusRunner(std::string sourceFile, std::string testcaseFile);
     virtual Language language() const;
   protected:
     virtual std::string compiler() const;

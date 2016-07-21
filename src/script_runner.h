@@ -6,26 +6,26 @@
 
 class ScriptRunner : public Runner{
   public:
-    ScriptRunner(std::string source_file, std::string testcase_file);
+    ScriptRunner(std::string sourceFile, std::string testcaseFile);
   protected:
-    virtual std::string script_command() const = 0;
-    virtual std::string execute_command() const;
+    virtual std::string interpreter() const = 0;
+    virtual std::string commandToExecute() const;
 };
 
 class RubyRunner : public ScriptRunner{
   public:
-    RubyRunner(std::string source_file, std::string testcase_file);
+    RubyRunner(std::string sourceFile, std::string testcaseFile);
     virtual Language language() const;
   protected:
-    virtual std::string script_command() const;
+    virtual std::string interpreter() const;
 };
 
 class JavaScriptRunner : public ScriptRunner{
   public:
-    JavaScriptRunner(std::string source_file, std::string testcase_file);
+    JavaScriptRunner(std::string sourceFile, std::string testcaseFile);
     virtual Language language() const;
   protected:
-    virtual std::string script_command() const;
+    virtual std::string interpreter() const;
 };
 
 #endif // YUOMAMO_TESTER_SCRIPT_RUNNER_H_
