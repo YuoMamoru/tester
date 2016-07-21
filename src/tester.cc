@@ -11,9 +11,34 @@
 Tester::Tester(int argc, char** argv){
     for(int i = 0; i < argc; i++)
         args_.push_back(std::string(argv[i]));
-    lang_ = removeExtension(args_[1], target_);
+    std::string fileName(args_[1]);
+    for(int i = fileName.length(); i > 0; i--){
+        if(fileName[i-1] != '.')
+            continue;
+        target_ = std::string(fileName.substr(0, i - 1));
+        std::string extension = fileName.substr(i, fileName.length() - i);
+        const char* source = args_[1].c_str();
+        const char* testcase = testcaseFile().c_str();
+        if(extension == "c")
+            runner_ = new CRunner(source, testcase);
+        else if(extension == "cc" || extension == "cpp")
+            runner_ = new CPlusPlusRunner(source, testcase);
+        else if(extension == "java")
+            runner_ = new JavaRunner(source, testcase);
+        else if(extension == "rb")
+            runner_ = new RubyRunner(source, testcase);
+        else if(extension == "cs")
+            runner_ = new CSharpRunner(source, testcase);
+        else if(extension == "js")
+            runner_ = new JavaScriptRunner(source, testcase);
+        else
+            runner_ = NULL;
+    }
 }
-Tester::~Tester(){}
+Tester::~Tester(){
+    if(runner_ != NULL)
+        delete runner_;
+}
 std::string Tester::testerFile() const{
     return args_[0];
 }
@@ -23,25 +48,8 @@ std::string Tester::sourceFile() const{
 std::string Tester::testcaseFile() const{
     return target_ + ".txt";
 }
-Language Tester::language() const{
-    return lang_;
-}
-
-Runner* createRunner(Language language, std::string sourceFile, std::string testcaseFile){
-    switch(language){
-    case C:
-        return new CRunner(sourceFile.c_str(), testcaseFile.c_str());
-    case CPlusPlus:
-        return new CPlusPlusRunner(sourceFile.c_str(), testcaseFile.c_str());
-    case Java:
-        return new JavaRunner(sourceFile.c_str(), testcaseFile.c_str());
-    case Ruby:
-        return new RubyRunner(sourceFile.c_str(), testcaseFile.c_str());
-    case CSharp:
-        return new CSharpRunner(sourceFile.c_str(), testcaseFile.c_str());
-    default:
-        return NULL;
-    }
+Runner* Tester::runner() const{
+    return runner_;
 }
 
 int main(int argc, char** argv){
@@ -49,8 +57,8 @@ int main(int argc, char** argv){
         std::cout << "no target.\n";
         return 0;
     }
-    Tester args(argc, argv);
-    Runner* runner = createRunner(args.language(), args.sourceFile(), args.testcaseFile());
+    Tester tester(argc, argv);
+    Runner* runner = tester.runner();
 //    std::cout << runner->test() << std::endl << args.testcaseFile() << std::endl;
     runner->run();
 }

@@ -18,13 +18,11 @@ class Tester{
     std::string testerFile() const;
     std::string sourceFile() const;
     std::string testcaseFile() const;
-    Language language() const;
+    Runner* runner() const;
   private:
     std::vector<std::string> args_;
-    Language lang_;
     std::string target_;
+    Runner* runner_;
 };
-
-Runner* createRunner(Language language, std::string sourceFile, std::string testcaseFile);
 
 #endif // YUOMAMO_TESTER_TESTER__H_
