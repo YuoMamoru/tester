@@ -5,17 +5,15 @@
 #include <unistd.h>
 #include "language.h"
 #include "runner.h"
-using namespace std;
 
-
-Runner::Runner(string source_file, string testcase_file){
+Runner::Runner(std::string source_file, std::string testcase_file){
     _source_file = source_file;
     _testcase_file = testcase_file;
 }
-string Runner::source_file() const{
+std::string Runner::source_file() const{
     return _source_file;
 }
-string Runner::testcase_file() const{
+std::string Runner::testcase_file() const{
     return _testcase_file;
 }
 Language Runner::language() const{
@@ -70,11 +68,11 @@ int Runner::cleanup() const{
     return 0;
 }
 void Runner::run() const{
-    cout << "compiling..." << endl;
+    std::cout << "compiling..." << std::endl;
     if(compile() != 0){
-        cerr << "Failed compile." << endl;
+        std::cerr << "Failed compile." << std::endl;
         exit(EXIT_FAILURE);
     }
-    cout << "executing..." << endl;
+    std::cout << "executing..." << std::endl;
     execute();
 }
