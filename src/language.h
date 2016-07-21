@@ -1,11 +1,11 @@
-#ifndef LANGUAGE_H_
-#define LANGUAGE_H_
+#ifndef YUOMAMO_TESTER_LANGUAGE_H_
+#define YUOMAMO_TESTER_LANGUAGE_H_
 
-using namespace std;
+#include <string>
 
 enum Language{
     C, CPlusPlus, Java, Ruby, CSharp, JavaScript, Unknown = 0xFFFF
 };
-Language remove_extension(string file_name, string& name);
+Language remove_extension(std::string file_name, std::string& name);
 
-#endif // LANGUAGE_H_
+#endif // YUOMAMO_TESTER_LANGUAGE_H_

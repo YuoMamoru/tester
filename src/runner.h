@@ -1,19 +1,20 @@
-#ifndef RUNNER_H_
-#define RUNNER_H_
+#ifndef YUOMAMO_TESTER_RUNNER_H_
+#define YUOMAMO_TESTER_RUNNER_H_
 
-using namespace std;
+#include <string>
+#include "language.h"
 
 class Runner{
-    string _source_file;
-    string _testcase_file;
+    std::string _source_file;
+    std::string _testcase_file;
 
 protected:
-    virtual string execute_command() const = 0;
+    virtual std::string execute_command() const = 0;
 
 public:
-    Runner(string source_file, string testcase_file);
-    string source_file() const;
-    string testcase_file() const;
+    Runner(std::string source_file, std::string testcase_file);
+    std::string source_file() const;
+    std::string testcase_file() const;
     virtual Language language() const;
     virtual int compile() const;
     virtual int execute() const;
@@ -21,4 +22,4 @@ public:
     void run() const;
 };
 
-#endif // RUNNER_H_
+#endif // YUOMAMO_TESTER_RUNNER_H_

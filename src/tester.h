@@ -1,21 +1,24 @@
-#ifndef TESTER__H_
-#define TESTER__H_
+#ifndef YUOMAMO_TESTER_TESTER__H_
+#define YUOMAMO_TESTER_TESTER__H_
 
-using namespace std;
+#include <string>
+#include <vector>
+#include "language.h"
+#include "runner.h"
 
 class Tester{
-    vector<string> _args;
+    std::vector<std::string> _args;
     Language _lang;
-    string _target;
+    std::string _target;
 
 public:
     Tester(int argc, char** argv);
-    string tester_file() const;
-    string source_file() const;
+    std::string tester_file() const;
+    std::string source_file() const;
     Language language() const;
-    string testcase_file() const;
+    std::string testcase_file() const;
 };
 
-Runner* create_runner(Language language, string source_file, string testcase_file);
+Runner* create_runner(Language language, std::string source_file, std::string testcase_file);
 
-#endif // TESTER__H_
+#endif // YUOMAMO_TESTER_TESTER__H_

@@ -1,30 +1,31 @@
-#ifndef SCRIPT_RUNNER_H_
-#define SCRIPT_RUNNER_H_
+#ifndef YUOMAMO_TESTER_SCRIPT_RUNNER_H_
+#define YUOMAMO_TESTER_SCRIPT_RUNNER_H_
 
-using namespace std;
+#include <string>
+#include "runner.h"
 
 class ScriptRunner : public Runner{
 protected:
-    virtual string script_command() const = 0;
-    virtual string execute_command() const;
+    virtual std::string script_command() const = 0;
+    virtual std::string execute_command() const;
 public:
-    ScriptRunner(string source_file, string testcase_file);
+    ScriptRunner(std::string source_file, std::string testcase_file);
 };
 
 class RubyRunner : public ScriptRunner{
 protected:
-    virtual string script_command() const;
+    virtual std::string script_command() const;
 public:
-    RubyRunner(string source_file, string testcase_file);
+    RubyRunner(std::string source_file, std::string testcase_file);
     virtual Language language() const;
 };
 
 class JavaScriptRunner : public ScriptRunner{
 protected:
-    virtual string script_command() const;
+    virtual std::string script_command() const;
 public:
-    JavaScriptRunner(string source_file, string testcase_file);
+    JavaScriptRunner(std::string source_file, std::string testcase_file);
     virtual Language language() const;
 };
 
-#endif // SCRIPT_RUNNER_H_
+#endif // YUOMAMO_TESTER_SCRIPT_RUNNER_H_
