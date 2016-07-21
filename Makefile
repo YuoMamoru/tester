@@ -2,8 +2,8 @@
 TARGET = tester
 CXX = g++
 CXXFLAGS = -O2 -g -Wall
-LDFLAGS = -lm
-SRCS = $(shell ls *.cc)
+SRCDIR = ./src
+SRCS = $(shell ls $(SRCDIR)/*.cc)
 OBJS = $(SRCS:.cc=.o)
 
 .PHONY: all clean
