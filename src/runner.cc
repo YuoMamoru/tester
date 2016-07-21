@@ -10,15 +10,6 @@ Runner::Runner(std::string source_file, std::string testcase_file){
     _source_file = source_file;
     _testcase_file = testcase_file;
 }
-std::string Runner::source_file() const{
-    return _source_file;
-}
-std::string Runner::testcase_file() const{
-    return _testcase_file;
-}
-Language Runner::language() const{
-    return Unknown;
-}
 int Runner::compile() const{
     return 0;
 }
@@ -75,4 +66,13 @@ void Runner::run() const{
     }
     std::cout << "executing..." << std::endl;
     execute();
+}
+std::string Runner::source_file() const{
+    return _source_file;
+}
+std::string Runner::testcase_file() const{
+    return _testcase_file;
+}
+Language Runner::language() const{
+    return Unknown;
 }

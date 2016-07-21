@@ -19,11 +19,11 @@ std::string Tester::tester_file() const{
 std::string Tester::source_file() const{
     return _args[1];
 }
-Language Tester::language() const{
-    return _lang;
-}
 std::string Tester::testcase_file() const{
     return _target + ".txt";
+}
+Language Tester::language() const{
+    return _lang;
 }
 
 Runner* create_runner(Language language, std::string source_file, std::string testcase_file){

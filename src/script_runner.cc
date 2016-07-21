@@ -11,18 +11,18 @@ std::string ScriptRunner::execute_command() const{
 
 RubyRunner::RubyRunner(std::string source_file, std::string testcase_file)
       : ScriptRunner(source_file, testcase_file){}
-std::string RubyRunner::script_command() const{
-    return "ruby";
-}
 Language RubyRunner::language() const{
     return Ruby;
+}
+std::string RubyRunner::script_command() const{
+    return "ruby";
 }
 
 JavaScriptRunner::JavaScriptRunner(std::string source_file, std::string testcase_file)
       : ScriptRunner(source_file, testcase_file){}
-std::string JavaScriptRunner::script_command() const{
-    return "node";
-}
 Language JavaScriptRunner::language() const{
     return JavaScript;
+}
+std::string JavaScriptRunner::script_command() const{
+    return "node";
 }
