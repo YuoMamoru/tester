@@ -4,7 +4,9 @@
 #include "script_runner.h"
 
 ScriptRunner::ScriptRunner(const char* sourceFile, const char* testcaseFile)
-      : Runner(sourceFile, testcaseFile){}
+      : Runner(sourceFile, testcaseFile){
+    setTimeLimit(16);
+}
 std::string ScriptRunner::commandToExecute() const{
     return interpreter() + " " + sourceFile();
 }

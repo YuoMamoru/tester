@@ -1,13 +1,29 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <string>
-#include <iostream>
 #include <cstdlib>
 #include "language.h"
 #include "runner.h"
 
-Runner::Runner(const char* sourceFile, const char* testcaseFile){
+namespace{
+int pid;
+void stopChildProcess(int sig){
+    if(pid <= 0){
+        return;
+    }
+    if(kill(pid, SIGINT) < 0){
+        perror("kill");
+        exit(EXIT_FAILURE);
+    }
+    printf("Timeout.\n");
+    exit(EXIT_SUCCESS);
+}
+}
+
+Runner::Runner(const char* sourceFile, const char* testcaseFile)
+      : timeLimit_(3){
     sourceFile_ = new char[strlen(sourceFile) + 1];
     testcaseFile_ = new char[strlen(testcaseFile) + 1];
     strcpy(sourceFile_, sourceFile);
@@ -21,6 +37,7 @@ int Runner::compile() const{
     return 0;
 }
 int Runner::execute() const{
+    printf("Executing...\n");
     int pipeToChild[2];
     int pipeFromChild[2];
     if(pipe(pipeToChild) < 0){
@@ -33,8 +50,7 @@ int Runner::execute() const{
         close(pipeToChild[1]);
         exit(EXIT_FAILURE);
     }
-    int pid = fork();
-    if(pid < 0){
+    if((pid = fork()) < 0){
         perror("fork");
         close(pipeToChild[0]);
         close(pipeToChild[1]);
@@ -54,25 +70,40 @@ int Runner::execute() const{
             exit(EXIT_FAILURE);
         }
     }
-    write(pipeToChild[1], "send message\n", 13);
-    write(pipeToChild[1], "send mesg\n", 10);
-    close(pipeToChild[1]);
-    char buff[255];
-    read(pipeFromChild[0], buff, 255);
-    printf("parent process:\n\n%s", buff);
+    else{
+        signal(SIGALRM, stopChildProcess);
+        alarm(timeLimit());
+        write(pipeToChild[1], "message\n12\n", 12);
+        close(pipeToChild[1]);
+        int status;
+        if(waitpid(pid, &status, WUNTRACED) < 0){
+            alarm(0);
+            perror("waitpid");
+            close(pipeFromChild[0]);
+            exit(EXIT_FAILURE);
+        }
+        alarm(0);
+        if(WIFEXITED(status)){
+            char buff[255];
+            read(pipeFromChild[0], buff, 255);
+            return WEXITSTATUS(status);
+        }
+        else{
+            return status;
+        }
+    }
     return 0;
 }
 int Runner::cleanup() const{
     return 0;
 }
 void Runner::run() const{
-    std::cout << "compiling..." << std::endl;
     if(compile() != 0){
-        std::cerr << "Failed compile." << std::endl;
+        fprintf(stderr, "Failed compile.\n");
         exit(EXIT_FAILURE);
     }
-    std::cout << "executing..." << std::endl;
     execute();
+    cleanup();
 }
 std::string Runner::sourceFile() const{
     return std::string(sourceFile_);
@@ -82,4 +113,10 @@ std::string Runner::testcaseFile() const{
 }
 Language Runner::language() const{
     return Unknown;
+}
+int Runner::timeLimit() const{
+    return timeLimit_;
+}
+void Runner::setTimeLimit(int timeLimitSecond){
+    timeLimit_ = timeLimitSecond;
 }

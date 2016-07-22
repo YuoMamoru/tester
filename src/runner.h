@@ -19,12 +19,15 @@ class Runner{
     void run() const;
     std::string sourceFile() const;
     std::string testcaseFile() const;
+    virtual int timeLimit() const;
+    void setTimeLimit(int timeLimitSecond);
     virtual Language language() const;
   protected:
     virtual std::string commandToExecute() const = 0;
   private:
     char* sourceFile_;
     char* testcaseFile_;
+    int timeLimit_;
 };
 
 #endif // YUOMAMO_TESTER_RUNNER_H_

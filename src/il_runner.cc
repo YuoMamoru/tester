@@ -5,7 +5,9 @@
 #include "il_runner.h"
 
 IlRunner::IlRunner(const char* sourceFile, const char* testcaseFile)
-      : CompilerRunner(sourceFile, testcaseFile){}
+      : CompilerRunner(sourceFile, testcaseFile){
+    setTimeLimit(5);
+}
 std::string IlRunner::commandToExecute() const{
     return virtualMachine() + " " + executableFile();
 }

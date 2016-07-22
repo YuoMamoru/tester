@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <string>
@@ -22,6 +23,7 @@ CompilerRunner::~CompilerRunner(){
     delete[] executableFile_;
 }
 int CompilerRunner::compile() const{
+    printf("Compiling...\n");
     return system(commandToCompile().c_str());
 }
 int CompilerRunner::cleanup() const{
