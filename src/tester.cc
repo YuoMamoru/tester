@@ -1,7 +1,6 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "language.h"
 #include "runner.h"
 #include "compiler_runner.h"
 #include "il_runner.h"
@@ -50,15 +49,4 @@ std::string Tester::testcaseFile() const{
 }
 Runner* Tester::runner() const{
     return runner_;
-}
-
-int main(int argc, char** argv){
-    if(argc < 2){
-        std::cout << "no target.\n";
-        return 0;
-    }
-    Tester tester(argc, argv);
-    Runner* runner = tester.runner();
-//    std::cout << runner->test() << std::endl << args.testcaseFile() << std::endl;
-    runner->run();
 }
