@@ -1,4 +1,5 @@
 tester
+test/test
 *.o
 *.h.gch
 *.swp
