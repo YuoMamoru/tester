@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/time.h>
 #include <sys/wait.h>
-#include <string>
 #include <cstdlib>
+#include <string>
+#include <vector>
 #include "language.h"
 #include "runner.h"
 
@@ -20,10 +22,32 @@ void stopChildProcess(int sig){
     printf("Timeout.\n");
     exit(EXIT_SUCCESS);
 }
+
+class TimeInterval{
+  public:
+    TimeInterval(){}
+    void start(){
+        gettimeofday(&startTime, NULL);
+    }
+    void stop(){
+        gettimeofday(&endTime, NULL);
+    }
+    double intervalSecond(){
+        return (endTime.tv_sec - startTime.tv_sec) +
+               (endTime.tv_usec - startTime.tv_usec) * 1e-6;
+    }
+  private:
+    timeval startTime;
+    timeval endTime;
+};
 }
 
 Runner::Runner(const char* sourceFile, const char* testcaseFile)
-      : timeLimit_(3){
+      : parentRFD_(-1),
+        parentWFD_(-1),
+        childRFD_(-1),
+        childWFD_(-1),
+        timeLimit_(3){
     sourceFile_ = new char[strlen(sourceFile) + 1];
     testcaseFile_ = new char[strlen(testcaseFile) + 1];
     strcpy(sourceFile_, sourceFile);
@@ -36,74 +60,131 @@ Runner::~Runner(){
 int Runner::compile() const{
     return 0;
 }
-int Runner::execute() const{
-    printf("Executing...\n");
-    int pipeToChild[2];
-    int pipeFromChild[2];
-    if(pipe(pipeToChild) < 0){
-        perror("popen");
-        exit(EXIT_FAILURE);
-    }
-    if(pipe(pipeFromChild) < 0){
-        perror("popen");
-        close(pipeToChild[0]);
-        close(pipeToChild[1]);
-        exit(EXIT_FAILURE);
-    }
+int Runner::runTest(const std::string input,
+                    const std::string expect,
+                    int testNo){
+    printf("[Testcase(%d)] ", testNo);
+    openFileDescriptor();
     if((pid = fork()) < 0){
         perror("fork");
-        close(pipeToChild[0]);
-        close(pipeToChild[1]);
-        close(pipeFromChild[0]);
-        close(pipeFromChild[1]);
+        close(parentRFD_);
+        close(parentWFD_);
+        close(childRFD_);
+        close(childWFD_);
         exit(EXIT_FAILURE);
     }
     if(pid == 0){
-        close(pipeToChild[1]);
-        close(pipeFromChild[0]);
-        dup2(pipeToChild[0], fileno(stdin));
-        dup2(pipeFromChild[1], fileno(stdout));
-        close(pipeToChild[0]);
-        close(pipeFromChild[1]);
+        close(parentRFD_);
+        close(parentWFD_);
+        dup2(childRFD_, fileno(stdin));
+        dup2(childWFD_, fileno(stdout));
+        close(childRFD_);
+        close(childWFD_);
         if(execlp("sh", "sh", "-c", commandToExecute().c_str(), NULL) < 0){
             perror("execute");
             exit(EXIT_FAILURE);
         }
     }
-    else{
-        signal(SIGALRM, stopChildProcess);
-        alarm(timeLimit());
-        write(pipeToChild[1], "message\n12\n", 12);
-        close(pipeToChild[1]);
-        int status;
-        if(waitpid(pid, &status, WUNTRACED) < 0){
-            alarm(0);
-            perror("waitpid");
-            close(pipeFromChild[0]);
-            exit(EXIT_FAILURE);
-        }
-        alarm(0);
-        if(WIFEXITED(status)){
-            char buff[255];
-            read(pipeFromChild[0], buff, 255);
-            return WEXITSTATUS(status);
-        }
-        else{
-            return status;
-        }
+    int bufferSize = 1024;
+    char* outputBuffer = new char[bufferSize];
+    double executionSecond = 99.99;
+    int ret = communicateChildProcess(outputBuffer,
+                                      bufferSize,
+                                      &executionSecond,
+                                      input.c_str());
+    if(strcmp(expect.c_str(), outputBuffer)){
+        printf("Wrong Answer: (%2.3fms)\n  expect: %s  output: %s",
+               executionSecond,
+               expect.c_str(),
+               outputBuffer);
     }
-    return 0;
+    else{
+        printf("Pass this test case. (%2.3fms)\n", executionSecond);
+    }
+    return ret;
+}
+void Runner::runTestcases(){
+    std::vector<std::pair<const char*, std::string> > testcases;
+    int testcaseCount = readTestcase(testcases, testcaseFile().c_str());
+    for(int i = 0; i < testcaseCount; i++){
+        runTest(testcases[i].first, testcases[i].second, i + 1);
+    }
 }
 int Runner::cleanup() const{
     return 0;
 }
-void Runner::run() const{
+void Runner::run(){
     if(compile() != 0){
         fprintf(stderr, "Failed compile.\n");
         exit(EXIT_FAILURE);
     }
-    execute();
+    runTestcases();
     cleanup();
+}
+void Runner::openFileDescriptor(){
+    int pipeParentToChild[2];
+    int pipeChildToParent[2];
+    if(pipe(pipeParentToChild) < 0){
+        perror("popen");
+        exit(EXIT_FAILURE);
+    }
+    if(pipe(pipeChildToParent) < 0){
+        perror("popen");
+        close(pipeParentToChild[0]);
+        close(pipeParentToChild[1]);
+        exit(EXIT_FAILURE);
+    }
+    parentRFD_ = pipeChildToParent[0];
+    parentWFD_ = pipeParentToChild[1];
+    childRFD_ = pipeParentToChild[0];
+    childWFD_ = pipeChildToParent[1];
+}
+int Runner::communicateChildProcess(char* outputBuffer,
+                                    int bufferSize,
+                                    double* executionSecond,
+                                    const char* inputBuffer) const{
+    signal(SIGALRM, stopChildProcess);
+    alarm(timeLimit());
+    TimeInterval timer;
+    timer.start();
+    close(childRFD_);
+    close(childWFD_);
+    write(parentWFD_, inputBuffer, strlen(inputBuffer));
+    close(parentWFD_);
+    int status;
+    if(waitpid(pid, &status, WUNTRACED) < 0){
+        alarm(0);
+        perror("waitpid");
+        close(parentRFD_);
+        exit(EXIT_FAILURE);
+    }
+    alarm(0);
+    timer.stop();
+    *executionSecond = timer.intervalSecond();
+    if(WIFEXITED(status)){
+        read(parentRFD_, outputBuffer, bufferSize);
+        close(parentRFD_);
+        return WEXITSTATUS(status);
+    }
+    else{
+        close(parentRFD_);
+        return status;
+    }
+}
+size_t Runner::readTestcase(
+      std::vector<std::pair<const char*, std::string> >& testcases,
+      const char* fileName) const{
+    // TODO
+    testcases.push_back(
+        std::pair<const char*, std::string>(
+            "massage\n12\n", std::string("7\n36\n")));
+    testcases.push_back(
+        std::pair<const char*, std::string>(
+            "This is a pen.\n7\n", std::string("14\n21\n")));
+    testcases.push_back(
+        std::pair<const char*, std::string>(
+            "one_line.\n-7\n", std::string("9\n-21\n")));
+    return testcases.size();
 }
 std::string Runner::sourceFile() const{
     return std::string(sourceFile_);

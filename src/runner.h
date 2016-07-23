@@ -2,6 +2,7 @@
 #define YUOMAMO_TESTER_RUNNER_H_
 
 #include <string>
+#include <vector>
 #include "language.h"
 
 class Runner{
@@ -14,9 +15,20 @@ class Runner{
     void operator=(const Runner&);
   public:
     virtual int compile() const;
-    virtual int execute() const;
+    int runTest(const std::string input, const std::string expect, int testNo);
+    void runTestcases();
     virtual int cleanup() const;
-    void run() const;
+    void run();
+  private:
+    void openFileDescriptor();
+    int communicateChildProcess(char* outputBuffer,
+                                int bufferSize,
+                                double* executionSecond,
+                                const char* inputBuffer) const;
+    size_t readTestcase(
+          std::vector<std::pair<const char*, std::string> >& testcase,
+          const char* fileName) const;
+  public:
     std::string sourceFile() const;
     std::string testcaseFile() const;
     virtual int timeLimit() const;
@@ -27,6 +39,10 @@ class Runner{
   private:
     char* sourceFile_;
     char* testcaseFile_;
+    int parentRFD_;
+    int parentWFD_;
+    int childRFD_;
+    int childWFD_;
     int timeLimit_;
 };
 
