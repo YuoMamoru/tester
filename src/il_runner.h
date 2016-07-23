@@ -26,8 +26,8 @@ class JavaRunner : public IlRunner{
     JavaRunner(const JavaRunner&);
     void operator=(const JavaRunner&);
   protected:
+    virtual std::string commandToCleanup() const;
     virtual std::string virtualMachine() const;
-    virtual std::string executableFile() const;
     virtual std::string compiler() const;
 };
 

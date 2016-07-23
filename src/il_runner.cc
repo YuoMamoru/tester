@@ -17,14 +17,14 @@ std::string IlRunner::commandToCompile() const{
 
 JavaRunner::JavaRunner(const char* sourceFile, const char* testcaseFile)
       : IlRunner(sourceFile, testcaseFile){}
+std::string JavaRunner::commandToCleanup() const{
+    return std::string("rm ") + executableFile() + ".class";
+}
 Language JavaRunner::language() const{
     return Java;
 }
 std::string JavaRunner::virtualMachine() const{
     return std::string("java");
-}
-std::string JavaRunner::executableFile() const{
-    return CompilerRunner::executableFile() + ".class";
 }
 std::string JavaRunner::compiler() const{
     return std::string("javac");
@@ -42,5 +42,5 @@ std::string CSharpRunner::executableFile() const{
     return CompilerRunner::executableFile() + ".exe";
 }
 std::string CSharpRunner::compiler() const{
-    return std::string("msc");
+    return std::string("mcs");
 }
