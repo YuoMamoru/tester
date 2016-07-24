@@ -29,3 +29,12 @@ Language JavaScriptRunner::language() const{
 std::string JavaScriptRunner::interpreter() const{
     return std::string("node");
 }
+
+PerlRunner::PerlRunner(const char* sourceFile, const char* testcaseFile)
+      : ScriptRunner(sourceFile, testcaseFile){}
+Language PerlRunner::language() const{
+    return Perl;
+}
+std::string PerlRunner::interpreter() const{
+    return std::string("perl");
+}

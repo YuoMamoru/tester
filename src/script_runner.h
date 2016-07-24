@@ -42,4 +42,17 @@ class JavaScriptRunner : public ScriptRunner{
     virtual std::string interpreter() const;
 };
 
+class PerlRunner : public ScriptRunner{
+  public:
+    PerlRunner(const char* sourceFile, const char* testcaseFile);
+  private:
+    PerlRunner();
+    PerlRunner(const PerlRunner&);
+    void operator=(const PerlRunner&);
+  public:
+    virtual Language language() const;
+  protected:
+    virtual std::string interpreter() const;
+};
+
 #endif // YUOMAMO_TESTER_SCRIPT_RUNNER_H_
