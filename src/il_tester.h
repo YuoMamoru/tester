@@ -1,49 +1,49 @@
-#ifndef YUOMAMO_TESTER_IL_RUNNER_H_
-#define YUOMAMO_TESTER_IL_RUNNER_H_
+#ifndef YUOMAMO_TESTER_IL_TESTER_H_
+#define YUOMAMO_TESTER_IL_TESTER_H_
 
 #include <string>
-#include "compiler_runner.h"
+#include "compiler_tester.h"
 
-class IlRunner : public CompilerRunner{
+class IlTester : public CompilerTester{
   public:
-    IlRunner(const char* sourceFile, const char* testcaseFile);
+    IlTester(const char* sourceFile, const char* testcaseFile);
   private:
-    IlRunner();
-    IlRunner(const IlRunner&);
-    void operator=(const IlRunner&);
+    IlTester();
+    IlTester(const IlTester&);
+    void operator=(const IlTester&);
   protected:
     virtual std::string virtualMachine() const = 0;
     virtual std::string commandToCompile() const;
     virtual std::string commandToExecute() const;
 };
 
-class JavaRunner : public IlRunner{
+class JavaTester : public IlTester{
   public:
-    JavaRunner(const char* sourceFile, const char* testcaseFile);
-    virtual Language language() const;
+    JavaTester(const char* sourceFile, const char* testcaseFile);
+    virtual std::string language() const;
   private:
-    JavaRunner();
-    JavaRunner(const JavaRunner&);
-    void operator=(const JavaRunner&);
+    JavaTester();
+    JavaTester(const JavaTester&);
+    void operator=(const JavaTester&);
   protected:
     virtual std::string commandToCleanup() const;
     virtual std::string virtualMachine() const;
     virtual std::string compiler() const;
 };
 
-class CSharpRunner : public IlRunner{
+class CSharpTester : public IlTester{
   public:
-    CSharpRunner(const char* sourceFile, const char* testcaseFile);
+    CSharpTester(const char* sourceFile, const char* testcaseFile);
   private:
-    CSharpRunner();
-    CSharpRunner(const CSharpRunner&);
-    void operator=(const CSharpRunner&);
+    CSharpTester();
+    CSharpTester(const CSharpTester&);
+    void operator=(const CSharpTester&);
   public:
-    virtual Language language() const;
+    virtual std::string language() const;
   protected:
     virtual std::string virtualMachine() const;
     virtual std::string executableFile() const;
     virtual std::string compiler() const;
 };
 
-#endif // YUOMAMO_TESTER_IL_RUNNER_H_
+#endif // YUOMAMO_TESTER_IL_TESTER_H_

@@ -1,46 +1,44 @@
 #include <string>
-#include "language.h"
-#include "runner.h"
-#include "compiler_runner.h"
-#include "il_runner.h"
+#include "compiler_tester.h"
+#include "il_tester.h"
 
-IlRunner::IlRunner(const char* sourceFile, const char* testcaseFile)
-      : CompilerRunner(sourceFile, testcaseFile){
+IlTester::IlTester(const char* sourceFile, const char* testcaseFile)
+      : CompilerTester(sourceFile, testcaseFile){
     setTimeLimit(5);
 }
-std::string IlRunner::commandToExecute() const{
+std::string IlTester::commandToExecute() const{
     return virtualMachine() + " " + executableFile();
 }
-std::string IlRunner::commandToCompile() const{
+std::string IlTester::commandToCompile() const{
     return compiler() + " " + sourceFile();
 }
 
-JavaRunner::JavaRunner(const char* sourceFile, const char* testcaseFile)
-      : IlRunner(sourceFile, testcaseFile){}
-std::string JavaRunner::commandToCleanup() const{
+JavaTester::JavaTester(const char* sourceFile, const char* testcaseFile)
+      : IlTester(sourceFile, testcaseFile){}
+std::string JavaTester::commandToCleanup() const{
     return std::string("rm ") + executableFile() + ".class";
 }
-Language JavaRunner::language() const{
-    return Java;
+std::string JavaTester::language() const{
+    return std::string("Java");
 }
-std::string JavaRunner::virtualMachine() const{
+std::string JavaTester::virtualMachine() const{
     return std::string("java");
 }
-std::string JavaRunner::compiler() const{
+std::string JavaTester::compiler() const{
     return std::string("javac");
 }
 
-CSharpRunner::CSharpRunner(const char* sourceFile, const char* testcaseFile)
-      : IlRunner(sourceFile, testcaseFile){}
-Language CSharpRunner::language() const{
-    return CSharp;
+CSharpTester::CSharpTester(const char* sourceFile, const char* testcaseFile)
+      : IlTester(sourceFile, testcaseFile){}
+std::string CSharpTester::language() const{
+    return std::string("C#");
 }
-std::string CSharpRunner::virtualMachine() const{
+std::string CSharpTester::virtualMachine() const{
     return std::string("mono");
 }
-std::string CSharpRunner::executableFile() const{
-    return CompilerRunner::executableFile() + ".exe";
+std::string CSharpTester::executableFile() const{
+    return CompilerTester::executableFile() + ".exe";
 }
-std::string CSharpRunner::compiler() const{
+std::string CSharpTester::compiler() const{
     return std::string("mcs");
 }

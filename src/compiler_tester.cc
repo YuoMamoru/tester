@@ -2,12 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <string>
-#include "language.h"
-#include "runner.h"
-#include "compiler_runner.h"
+#include "tester.h"
+#include "compiler_tester.h"
 
-CompilerRunner::CompilerRunner(const char* sourceFile, const char* testcaseFile)
-      : Runner(sourceFile, testcaseFile){
+CompilerTester::CompilerTester(const char* sourceFile, const char* testcaseFile)
+      : Tester(sourceFile, testcaseFile){
     const char* ext = strrchr(sourceFile, '.');
     if(ext == NULL){
         executableFile_ = new char[strlen(sourceFile) + 1];
@@ -19,44 +18,44 @@ CompilerRunner::CompilerRunner(const char* sourceFile, const char* testcaseFile)
         executableFile_[ext - sourceFile] = '\0';
     }
 }
-CompilerRunner::~CompilerRunner(){
+CompilerTester::~CompilerTester(){
     delete[] executableFile_;
 }
-int CompilerRunner::compile() const{
+int CompilerTester::compile() const{
     printf("Compiling...\n");
     return system(commandToCompile().c_str());
 }
-int CompilerRunner::cleanup() const{
+int CompilerTester::cleanup() const{
     return system(commandToCleanup().c_str());
 }
-std::string CompilerRunner::executableFile() const{
+std::string CompilerTester::executableFile() const{
     return executableFile_;
 }
-std::string CompilerRunner::commandToCompile() const{
+std::string CompilerTester::commandToCompile() const{
     return compiler() + " -o " + executableFile() + " " + sourceFile();
 }
-std::string CompilerRunner::commandToExecute() const{
+std::string CompilerTester::commandToExecute() const{
     return std::string("./") + executableFile();
 }
-std::string CompilerRunner::commandToCleanup() const{
+std::string CompilerTester::commandToCleanup() const{
     return std::string("rm ") + executableFile();
 }
 
-CRunner::CRunner(const char* sourceFile, const char* testcaseFile)
-      : CompilerRunner(sourceFile, testcaseFile){}
-Language CRunner::language() const{
-    return C;
+CTester::CTester(const char* sourceFile, const char* testcaseFile)
+      : CompilerTester(sourceFile, testcaseFile){}
+std::string CTester::language() const{
+    return std::string("C");
 }
-std::string CRunner::compiler() const{
+std::string CTester::compiler() const{
     return std::string("gcc");
 }
 
-CPlusPlusRunner::CPlusPlusRunner(const char* sourceFile,
+CPlusPlusTester::CPlusPlusTester(const char* sourceFile,
                                  const char* testcaseFile)
-      : CompilerRunner(sourceFile, testcaseFile){}
-Language CPlusPlusRunner::language() const{
-    return CPlusPlus;
+      : CompilerTester(sourceFile, testcaseFile){}
+std::string CPlusPlusTester::language() const{
+    return std::string("C++");
 }
-std::string CPlusPlusRunner::compiler() const{
+std::string CPlusPlusTester::compiler() const{
     return std::string("g++");
 }

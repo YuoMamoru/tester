@@ -1,40 +1,38 @@
 #include <string>
-#include "language.h"
-#include "runner.h"
-#include "script_runner.h"
+#include "script_tester.h"
 
-ScriptRunner::ScriptRunner(const char* sourceFile, const char* testcaseFile)
-      : Runner(sourceFile, testcaseFile){
+ScriptTester::ScriptTester(const char* sourceFile, const char* testcaseFile)
+      : Tester(sourceFile, testcaseFile){
     setTimeLimit(16);
 }
-std::string ScriptRunner::commandToExecute() const{
+std::string ScriptTester::commandToExecute() const{
     return interpreter() + " " + sourceFile();
 }
 
-RubyRunner::RubyRunner(const char* sourceFile, const char* testcaseFile)
-      : ScriptRunner(sourceFile, testcaseFile){}
-Language RubyRunner::language() const{
-    return Ruby;
+RubyTester::RubyTester(const char* sourceFile, const char* testcaseFile)
+      : ScriptTester(sourceFile, testcaseFile){}
+std::string RubyTester::language() const{
+    return std::string("Ruby");
 }
-std::string RubyRunner::interpreter() const{
+std::string RubyTester::interpreter() const{
     return std::string("ruby");
 }
 
-JavaScriptRunner::JavaScriptRunner(const char* sourceFile,
+JavaScriptTester::JavaScriptTester(const char* sourceFile,
                                    const char* testcaseFile)
-      : ScriptRunner(sourceFile, testcaseFile){}
-Language JavaScriptRunner::language() const{
-    return JavaScript;
+      : ScriptTester(sourceFile, testcaseFile){}
+std::string JavaScriptTester::language() const{
+    return std::string("JavaScript");
 }
-std::string JavaScriptRunner::interpreter() const{
+std::string JavaScriptTester::interpreter() const{
     return std::string("node");
 }
 
-PerlRunner::PerlRunner(const char* sourceFile, const char* testcaseFile)
-      : ScriptRunner(sourceFile, testcaseFile){}
-Language PerlRunner::language() const{
-    return Perl;
+PerlTester::PerlTester(const char* sourceFile, const char* testcaseFile)
+      : ScriptTester(sourceFile, testcaseFile){}
+std::string PerlTester::language() const{
+    return std::string("Perl");
 }
-std::string PerlRunner::interpreter() const{
+std::string PerlTester::interpreter() const{
     return std::string("perl");
 }

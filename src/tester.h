@@ -1,18 +1,17 @@
-#ifndef YUOMAMO_TESTER_RUNNER_H_
-#define YUOMAMO_TESTER_RUNNER_H_
+#ifndef YUOMAMO_TESTER_TESTER_H_
+#define YUOMAMO_TESTER_TESTER_H_
 
 #include <string>
 #include <vector>
-#include "language.h"
 
-class Runner{
+class Tester{
   public:
-    Runner(const char* sourceFile, const char* testcaseFile);
-    virtual ~Runner();
+    Tester(const char* sourceFile, const char* testcaseFile);
+    virtual ~Tester();
   private:
-    Runner();
-    Runner(const Runner&);
-    void operator=(const Runner&);
+    Tester();
+    Tester(const Tester&);
+    void operator=(const Tester&);
   public:
     virtual int compile() const;
     int runTest(const std::string input, const std::string expect, int testNo);
@@ -33,7 +32,7 @@ class Runner{
     std::string testcaseFile() const;
     virtual int timeLimit() const;
     void setTimeLimit(int timeLimitSecond);
-    virtual Language language() const;
+    virtual std::string language() const = 0;
   protected:
     virtual std::string commandToExecute() const = 0;
   private:
@@ -46,4 +45,4 @@ class Runner{
     int timeLimit_;
 };
 
-#endif // YUOMAMO_TESTER_RUNNER_H_
+#endif // YUOMAMO_TESTER_TESTER_H_

@@ -1,18 +1,17 @@
-#ifndef YUOMAMO_TESTER_COMPILER_RUNNER_H_
-#define YUOMAMO_TESTER_COMPILER_RUNNER_H_
+#ifndef YUOMAMO_TESTER_COMPILER_TESTER_H_
+#define YUOMAMO_TESTER_COMPILER_TESTER_H_
 
 #include <string>
-#include "language.h"
-#include "runner.h"
+#include "tester.h"
 
-class CompilerRunner : public Runner{
+class CompilerTester : public Tester{
   public:
-    CompilerRunner(const char* sourceFile, const char* testcaseFile);
-    virtual ~CompilerRunner();
+    CompilerTester(const char* sourceFile, const char* testcaseFile);
+    virtual ~CompilerTester();
   private:
-    CompilerRunner();
-    CompilerRunner(const CompilerRunner&);
-    void operator=(const CompilerRunner&);
+    CompilerTester();
+    CompilerTester(const CompilerTester&);
+    void operator=(const CompilerTester&);
   public:
     virtual int compile() const;
     virtual int cleanup() const;
@@ -26,29 +25,29 @@ class CompilerRunner : public Runner{
     char* executableFile_;
 };
 
-class CRunner : public CompilerRunner{
+class CTester : public CompilerTester{
   public:
-    CRunner(const char* sourceFile, const char* testcaseFile);
+    CTester(const char* sourceFile, const char* testcaseFile);
   private:
-    CRunner();
-    CRunner(const CRunner&);
-    void operator=(const CRunner&);
+    CTester();
+    CTester(const CTester&);
+    void operator=(const CTester&);
   public:
-    virtual Language language() const;
+    virtual std::string language() const;
   protected:
     virtual std::string compiler() const;
 };
 
-class CPlusPlusRunner : public CompilerRunner{
+class CPlusPlusTester : public CompilerTester{
   public:
-    CPlusPlusRunner(const char* sourceFile, const char* testcaseFile);
+    CPlusPlusTester(const char* sourceFile, const char* testcaseFile);
   private:
-    CPlusPlusRunner();
-    CPlusPlusRunner(const CPlusPlusRunner&);
-    void operator=(const CPlusPlusRunner&);
-    virtual Language language() const;
+    CPlusPlusTester();
+    CPlusPlusTester(const CPlusPlusTester&);
+    void operator=(const CPlusPlusTester&);
+    virtual std::string language() const;
   protected:
     virtual std::string compiler() const;
 };
 
-#endif // YUOMAMO_TESTER_COMPILER_RUNNER_H_
+#endif // YUOMAMO_TESTER_COMPILER_TESTER_H_

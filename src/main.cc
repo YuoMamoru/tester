@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include "runner.h"
-#include "compiler_runner.h"
-#include "il_runner.h"
-#include "script_runner.h"
+#include "tester.h"
+#include "compiler_tester.h"
+#include "il_tester.h"
+#include "script_tester.h"
 
 namespace{
 
@@ -69,7 +69,7 @@ Language determineLanguage(const char* language, const char* sourceFileName){
     return Unknown;
 }
 
-Runner* createRunner(const char* sourceFileName,
+Tester* createTester(const char* sourceFileName,
                      const char* language,
                      const char* testcaseFileName){
     char* fileName = NULL;
@@ -85,19 +85,19 @@ Runner* createRunner(const char* sourceFileName,
     const char* test = testcaseFileName == NULL ? fileName : testcaseFileName;
     switch(determineLanguage(language, sourceFileName)){
       case C:
-        return new CRunner(sourceFileName, test);
+        return new CTester(sourceFileName, test);
       case CPlusPlus:
-        return new CPlusPlusRunner(sourceFileName, test);
+        return new CPlusPlusTester(sourceFileName, test);
       case Java:
-        return new JavaRunner(sourceFileName, test);
+        return new JavaTester(sourceFileName, test);
       case Ruby:
-        return new RubyRunner(sourceFileName, test);
+        return new RubyTester(sourceFileName, test);
       case CSharp:
-        return new CSharpRunner(sourceFileName, test);
+        return new CSharpTester(sourceFileName, test);
       case JavaScript:
-        return new JavaScriptRunner(sourceFileName, test);
+        return new JavaScriptTester(sourceFileName, test);
       case Perl:
-        return new PerlRunner(sourceFileName, test);
+        return new PerlTester(sourceFileName, test);
       default:
         fprintf(stderr, "Cannet determine a programming language\n");
         return NULL;
@@ -135,7 +135,7 @@ int main(int argc, char** argv){
         return 1;
     }
     char* sourceFileName = argv[optind];
-    Runner* runner = createRunner(sourceFileName, language, testcaseFileName);
+    Tester* runner = createTester(sourceFileName, language, testcaseFileName);
     if(runner == NULL)
         return 1;
     runner->run();

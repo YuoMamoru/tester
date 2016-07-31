@@ -6,8 +6,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
-#include "language.h"
-#include "runner.h"
+#include "tester.h"
 
 namespace{
 int pid;
@@ -42,7 +41,7 @@ class TimeInterval{
 };
 }
 
-Runner::Runner(const char* sourceFile, const char* testcaseFile)
+Tester::Tester(const char* sourceFile, const char* testcaseFile)
       : parentRFD_(-1),
         parentWFD_(-1),
         childRFD_(-1),
@@ -53,14 +52,14 @@ Runner::Runner(const char* sourceFile, const char* testcaseFile)
     strcpy(sourceFile_, sourceFile);
     strcpy(testcaseFile_, testcaseFile);
 }
-Runner::~Runner(){
+Tester::~Tester(){
     delete[] sourceFile_;
     delete[] testcaseFile_;
 }
-int Runner::compile() const{
+int Tester::compile() const{
     return 0;
 }
-int Runner::runTest(const std::string input,
+int Tester::runTest(const std::string input,
                     const std::string expect,
                     int testNo){
     printf("[Testcase(%d)] ", testNo);
@@ -103,17 +102,17 @@ int Runner::runTest(const std::string input,
     }
     return ret;
 }
-void Runner::runTestcases(){
+void Tester::runTestcases(){
     std::vector<std::pair<const char*, std::string> > testcases;
     int testcaseCount = readTestcase(testcases, testcaseFile().c_str());
     for(int i = 0; i < testcaseCount; i++){
         runTest(testcases[i].first, testcases[i].second, i + 1);
     }
 }
-int Runner::cleanup() const{
+int Tester::cleanup() const{
     return 0;
 }
-void Runner::run(){
+void Tester::run(){
     if(compile() != 0){
         fprintf(stderr, "Failed compile.\n");
         exit(EXIT_FAILURE);
@@ -121,7 +120,7 @@ void Runner::run(){
     runTestcases();
     cleanup();
 }
-void Runner::openFileDescriptor(){
+void Tester::openFileDescriptor(){
     int pipeParentToChild[2];
     int pipeChildToParent[2];
     if(pipe(pipeParentToChild) < 0){
@@ -139,7 +138,7 @@ void Runner::openFileDescriptor(){
     childRFD_ = pipeParentToChild[0];
     childWFD_ = pipeChildToParent[1];
 }
-int Runner::communicateChildProcess(char* outputBuffer,
+int Tester::communicateChildProcess(char* outputBuffer,
                                     int bufferSize,
                                     double* executionSecond,
                                     const char* inputBuffer) const{
@@ -171,7 +170,7 @@ int Runner::communicateChildProcess(char* outputBuffer,
         return status;
     }
 }
-size_t Runner::readTestcase(
+size_t Tester::readTestcase(
       std::vector<std::pair<const char*, std::string> >& testcases,
       const char* fileName) const{
     // TODO
@@ -186,18 +185,15 @@ size_t Runner::readTestcase(
             "one_line.\n-7\n", std::string("9\n-21\n")));
     return testcases.size();
 }
-std::string Runner::sourceFile() const{
+std::string Tester::sourceFile() const{
     return std::string(sourceFile_);
 }
-std::string Runner::testcaseFile() const{
+std::string Tester::testcaseFile() const{
     return std::string(testcaseFile_);
 }
-Language Runner::language() const{
-    return Unknown;
-}
-int Runner::timeLimit() const{
+int Tester::timeLimit() const{
     return timeLimit_;
 }
-void Runner::setTimeLimit(int timeLimitSecond){
+void Tester::setTimeLimit(int timeLimitSecond){
     timeLimit_ = timeLimitSecond;
 }

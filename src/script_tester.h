@@ -1,58 +1,58 @@
-#ifndef YUOMAMO_TESTER_SCRIPT_RUNNER_H_
-#define YUOMAMO_TESTER_SCRIPT_RUNNER_H_
+#ifndef YUOMAMO_TESTER_SCRIPT_TESTER_H_
+#define YUOMAMO_TESTER_SCRIPT_TESTER_H_
 
 #include <string>
-#include "runner.h"
+#include "tester.h"
 
-class ScriptRunner : public Runner{
+class ScriptTester : public Tester{
   public:
-    ScriptRunner(const char* sourceFile, const char* testcaseFile);
+    ScriptTester(const char* sourceFile, const char* testcaseFile);
   private:
-    ScriptRunner();
-    ScriptRunner(const ScriptRunner&);
-    void operator=(const ScriptRunner&);
+    ScriptTester();
+    ScriptTester(const ScriptTester&);
+    void operator=(const ScriptTester&);
   protected:
     virtual std::string interpreter() const = 0;
     virtual std::string commandToExecute() const;
 };
 
-class RubyRunner : public ScriptRunner{
+class RubyTester : public ScriptTester{
   public:
-    RubyRunner(const char* sourceFile, const char* testcaseFile);
+    RubyTester(const char* sourceFile, const char* testcaseFile);
   private:
-    RubyRunner();
-    RubyRunner(const RubyRunner&);
-    void operator=(const RubyRunner&);
+    RubyTester();
+    RubyTester(const RubyTester&);
+    void operator=(const RubyTester&);
   public:
-    virtual Language language() const;
+    virtual std::string language() const;
   protected:
     virtual std::string interpreter() const;
 };
 
-class JavaScriptRunner : public ScriptRunner{
+class JavaScriptTester : public ScriptTester{
   public:
-    JavaScriptRunner(const char* sourceFile, const char* testcaseFile);
+    JavaScriptTester(const char* sourceFile, const char* testcaseFile);
   private:
-    JavaScriptRunner();
-    JavaScriptRunner(const JavaScriptRunner&);
-    void operator=(const JavaScriptRunner&);
+    JavaScriptTester();
+    JavaScriptTester(const JavaScriptTester&);
+    void operator=(const JavaScriptTester&);
   public:
-    virtual Language language() const;
+    virtual std::string language() const;
   protected:
     virtual std::string interpreter() const;
 };
 
-class PerlRunner : public ScriptRunner{
+class PerlTester : public ScriptTester{
   public:
-    PerlRunner(const char* sourceFile, const char* testcaseFile);
+    PerlTester(const char* sourceFile, const char* testcaseFile);
   private:
-    PerlRunner();
-    PerlRunner(const PerlRunner&);
-    void operator=(const PerlRunner&);
+    PerlTester();
+    PerlTester(const PerlTester&);
+    void operator=(const PerlTester&);
   public:
-    virtual Language language() const;
+    virtual std::string language() const;
   protected:
     virtual std::string interpreter() const;
 };
 
-#endif // YUOMAMO_TESTER_SCRIPT_RUNNER_H_
+#endif // YUOMAMO_TESTER_SCRIPT_TESTER_H_
