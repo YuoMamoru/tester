@@ -92,13 +92,22 @@ int Tester::runTest(const std::string input,
                                       &executionSecond,
                                       input.c_str());
     if(strcmp(expect.c_str(), outputBuffer)){
-        printf("Wrong Answer: (%2.3fms)\n  expect: %s  output: %s",
-               executionSecond,
-               expect.c_str(),
-               outputBuffer);
+        std::string formattedExpect(expect);
+        std::string::size_type pos = formattedExpect.length() - 1;
+        while((pos = formattedExpect.rfind("\n", --pos)) != std::string::npos){
+            formattedExpect.insert(pos + 1, "                        ");
+        }
+        std::string formattedOutput(outputBuffer);
+        pos = formattedOutput.length() - 1;
+        while((pos = formattedOutput.rfind("\n", --pos)) != std::string::npos){
+            formattedOutput.insert(pos + 1, "                        ");
+        }
+        printf("\x1b[31mWrong Answer (%2.3fms):\n", executionSecond);
+        printf("                expect: %s", formattedExpect.c_str());
+        printf("                output: %s\x1b[39m", formattedOutput.c_str());
     }
     else{
-        printf("Pass this test case. (%2.3fms)\n", executionSecond);
+        printf("\x1b[32mPass this test case. (%2.3fms)\x1b[39m\n", executionSecond);
     }
     return ret;
 }
