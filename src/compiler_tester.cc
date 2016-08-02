@@ -38,7 +38,7 @@ std::string CompilerTester::commandToExecute() const{
     return std::string("./") + executableFile();
 }
 std::string CompilerTester::commandToCleanup() const{
-    return std::string("rm ") + executableFile();
+    return std::string("rm ") + executableFile() + ".o " + executableFile();
 }
 
 CTester::CTester(const char* sourceFile, const char* testcaseFile)
@@ -58,4 +58,16 @@ std::string CPlusPlusTester::language() const{
 }
 std::string CPlusPlusTester::compiler() const{
     return std::string("g++");
+}
+
+PascalTester::PascalTester(const char* sourceFile, const char* testcaseFile)
+      : CompilerTester(sourceFile, testcaseFile){}
+std::string PascalTester::language() const{
+    return std::string("Pascal");
+}
+std::string PascalTester::compiler() const{
+    return std::string("fpc");
+}
+std::string PascalTester::commandToCompile() const{
+    return compiler() + " " + sourceFile();
 }

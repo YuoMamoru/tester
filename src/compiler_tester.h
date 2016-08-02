@@ -50,4 +50,18 @@ class CPlusPlusTester : public CompilerTester{
     virtual std::string compiler() const;
 };
 
+class PascalTester : public CompilerTester{
+  public:
+    PascalTester(const char* sourceFile, const char* testcaseFile);
+  private:
+    PascalTester();
+    PascalTester(const PascalTester&);
+    void operator=(const PascalTester&);
+  public:
+    virtual std::string language() const;
+  protected:
+    virtual std::string compiler() const;
+    virtual std::string commandToCompile() const;
+};
+
 #endif // YUOMAMO_TESTER_COMPILER_TESTER_H_

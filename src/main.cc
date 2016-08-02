@@ -9,7 +9,7 @@
 namespace{
 
 enum Language{
-    C, CPlusPlus, Java, Ruby, CSharp, JavaScript, Perl, Unknown = -1
+    C, CPlusPlus, Java, Ruby, CSharp, JavaScript, Perl, Pascal, Unknown = -1
 };
 
 void printHelp(){
@@ -17,7 +17,8 @@ void printHelp(){
     printf("\n");
     printf("Usaage: tester [options] [programfile]\n");
     printf("  -l <language>     specify the programming language. support following\n");
-    printf("                    languages: C, C++, Java, JavaScript (or js), C#, Ruby, Perl\n");
+    printf("                    languages: C, C++, Java, JavaScript (or js), C#, Ruby,\n");
+    printf("                    Perl, Pascal\n");
     printf("  -t <filename>     specify file name that describes the test-cases\n");
     printf("  -h                show this message\n");
 }
@@ -49,6 +50,9 @@ Language determineLanguage(const char* language, const char* sourceFileName){
             return JavaScript;
         if(strcasecmp(extension, "pl") == 0)
             return Perl;
+        if(strcasecmp(extension, "pas") == 0 ||
+              strcasecmp(extension, "dpr") == 0)
+            return Pascal;
         return Unknown;
     }
     if(strcasecmp(language, "c") == 0)
@@ -66,6 +70,10 @@ Language determineLanguage(const char* language, const char* sourceFileName){
         return JavaScript;
     if(strcmp(language, "perl") == 0)
         return Perl;
+    if(strcasecmp(language, "pascal") == 0 ||
+          strcasecmp(language, "objectpascal") == 0 ||
+          strcasecmp(language, "delphi") == 0)
+        return Pascal;
     return Unknown;
 }
 
@@ -98,6 +106,8 @@ Tester* createTester(const char* sourceFileName,
         return new JavaScriptTester(sourceFileName, test);
       case Perl:
         return new PerlTester(sourceFileName, test);
+      case Pascal:
+        return new PascalTester(sourceFileName, test);
       default:
         fprintf(stderr, "Cannet determine a programming language\n");
         return NULL;
